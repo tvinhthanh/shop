@@ -72,8 +72,8 @@ const Booking = () => {
           }}
         >
           <BookingForm
-            currentUser={currentUser}
-            paymentIntent={paymentIntentData}
+            // currentUser={currentUser}
+            // paymentIntent={paymentIntentData}
           />
         </Elements>
       )}
