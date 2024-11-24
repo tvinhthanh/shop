@@ -6,7 +6,7 @@ const connection = require('../config/db');
 // Get all cart items for a customer
 router.get('/:customerId', async (req, res) => {
   try {
-    const cartItems = await Cart.getByCustomerId(req.params.customerId);
+    const cartItems = await Cart.getByCustomerId(req.params.CustomerID);
     res.json(cartItems);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -52,15 +52,19 @@ router.delete('/:id', async (req, res) => {
 });
 
 
-// Thêm sản phẩm vào giỏ hàng
 router.post('/add', async (req, res) => {
   try {
-    const { userId, productId, quantity } = req.body;
+    const { CustomerID, ProductID, Quantity } = req.body;
+
+    // Kiểm tra dữ liệu đầu vào
+    if (!CustomerID || !ProductID) {
+      return res.status(400).json({ error: 'Invalid input data' });
+    }
 
     // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
     const [existingProduct] = await connection.promise().query(
-      'SELECT * FROM Cart WHERE UserID = ? AND ProductID = ?',
-      [userId, productId]
+      'SELECT * FROM Cart WHERE CustomerID = ? AND ProductID = ?',
+      [CustomerID, ProductID]
     );
 
     if (existingProduct.length > 0) {
@@ -74,8 +78,8 @@ router.post('/add', async (req, res) => {
     } else {
       // Nếu sản phẩm chưa có trong giỏ hàng, thêm mới
       await connection.promise().query(
-        'INSERT INTO Cart (UserID, ProductID, Quantity) VALUES (?, ?, ?)',
-        [userId, productId, quantity]
+        'INSERT INTO Cart (CustomerID, ProductID, Quantity) VALUES (?, ?, ?)',
+        [CustomerID, ProductID, Quantity]
       );
       return res.status(201).json({ message: 'Product added to cart' });
     }
@@ -83,6 +87,7 @@ router.post('/add', async (req, res) => {
     res.status(500).json({ error: 'Error adding product to cart: ' + err.message });
   }
 });
+
 
 
 module.exports = router;

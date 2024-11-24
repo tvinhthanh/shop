@@ -1,8 +1,7 @@
-// config/db.js
 const mysql = require('mysql2');
 
 // Create a connection pool for better performance
-const connection = mysql.createPool({
+const pool = mysql.createPool({
   host: process.env.DB_HOST,  // Use environment variables for configuration
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
@@ -12,4 +11,5 @@ const connection = mysql.createPool({
   queueLimit: 0
 });
 
-module.exports = connection;
+// Exporting the promise-based pool for async/await queries
+module.exports = pool.promise();

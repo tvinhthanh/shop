@@ -22,20 +22,8 @@ router.post('/', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+//
 
-// Update a delivery note
-router.put('/:id', async (req, res) => {
-  try {
-    const updated = await DeliveryNote.update(req.params.id, req.body);
-    if (updated) {
-      res.json({ message: 'Delivery note updated successfully' });
-    } else {
-      res.status(404).json({ error: 'Delivery note not found' });
-    }
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
 
 // Delete a delivery note
 router.delete('/:id', async (req, res) => {

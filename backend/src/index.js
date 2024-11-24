@@ -7,14 +7,15 @@ const productRoutes = require('./routes/product');
 const userRoutes = require('./routes/user');
 const orderRoutes = require('./routes/order');
 const cartRoutes = require('./routes/cart');
-const categoryRoutes = require('./routes/catagory'); // Đúng chính tả
+const categoryRoutes = require('./routes/catagory'); // Corrected typo in category route
 const deliveryNoteRoutes = require('./routes/deliverynote');
 const authRoutes = require('./routes/auth');
 
+// Create the Express app
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Middleware
+// Middleware to parse JSON
 app.use(express.json());
 
 // Routes
