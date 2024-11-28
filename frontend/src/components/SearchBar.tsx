@@ -48,7 +48,7 @@ const SearchBar = () => {
 
       <div className="flex bg-white px-2 py-1 gap-2">
         <label className="items-center flex">
-          Adults:
+          Người lớn:
           <input
             className="w-full p-1 focus:outline-none font-bold"
             type="number"
@@ -59,7 +59,7 @@ const SearchBar = () => {
           />
         </label>
         <label className="items-center flex">
-          Children:
+          Trẻ em:
           <input
             className="w-full p-1 focus:outline-none font-bold"
             type="number"
@@ -100,10 +100,10 @@ const SearchBar = () => {
       </div>
       <div className="flex gap-1">
         <button className="w-2/3 bg-blue-600 text-white h-full p-2 font-bold text-xl hover:bg-blue-500">
-          Search
+          Tìm
         </button>
         <button className="w-1/3 bg-red-600 text-white h-full p-2 font-bold text-xl hover:bg-red-500">
-          Clear
+          Xóa
         </button>
       </div>
     </form>

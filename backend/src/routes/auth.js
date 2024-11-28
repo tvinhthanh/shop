@@ -1,10 +1,12 @@
-const express = require("express");
-const { check, validationResult } = require("express-validator");
-const User = require("../models/user"); // Assuming you have a User model to interact with DB
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken"); // Ensure this is declared once
-const verifyToken = require("../middleware/auth"); // Assuming verifyToken middleware
+const express = require('express');
+const { check, validationResult } = require('express-validator');
+const connection = require('../config/database'); // Import kết nối MySQL
+const verifyToken = require("../middleware/auth");
+const User = require('../models/user');
+const jwt = require('jsonwebtoken'); // Add this line at the top of your file
+const bcrypt = require('bcryptjs'); // Ensure bcrypt is imported as well
 const router = express.Router();
+
 const validateToken = (req, res, next) => {
     const token = req.cookies["auth_token"] || req.headers["authorization"];
     if (!token) {
@@ -22,7 +24,7 @@ const validateToken = (req, res, next) => {
   };
 
   
-router.post(
+  router.post(
     "/register",
     [
       check("firstName", "First Name is required").notEmpty(),
@@ -45,8 +47,8 @@ router.post(
       }
   
       try {
-        // Check if email already exists
-        const existingUser = await User.findOne({ email });
+        // Check if email already exists (update find method as needed)
+        const existingUser = await User.findOne('email', email);  // Ensure User.findOne() is implemented properly
         if (existingUser) {
           return res.status(400).json({ message: "Email is already in use" });
         }
@@ -54,23 +56,23 @@ router.post(
         // Hash the password before saving
         const hashedPassword = await bcrypt.hash(password, 10);
   
-        // Create a new user
-        const newUser = new User({
-          firstName,
-          lastName,
+        // Create a new user object
+        const newUser = {
+          first_name: firstName, // Note: field names must match your DB schema
+          last_name: lastName,
           phone,
           email,
           password: hashedPassword,
-          role,
+          role: role,  // Default role if undefined
           address,
-          createAt: new Date().toISOString(),
-        });
+          create_at: new Date().toISOString(),
+        };
   
         // Save the new user to the database
-        await newUser.save();
+        const userId = await User.create(newUser);  // Lưu người dùng vào DB
   
         // Generate JWT token
-        const token = jwt.sign({ userId: newUser.id, role: newUser.role }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
+        const token = jwt.sign({ userId, role: newUser.role }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
   
         // Respond with success
         return res.status(201).json({
@@ -83,68 +85,83 @@ router.post(
       }
     }
   );
+  // Login user endpoint
+  router.post(
+    "/login",
+    [
+      check("email", "Valid Email is required").isEmail(),
+      check("password", "Password with 6 or more characters required").isLength({ min: 6 }),
+    ],
+    async (req, res) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ message: errors.array() });
+      }
   
-  router.get("/hello", (req, res) => {
-    return res.status(200).send("Hello, World!");
-});
-
-// Login user endpoint
-router.post(
-  "/login",
-  [
-    check("email", "Email is required").isEmail(),
-    check("password", "Password with 6 or more characters required").isLength({ min: 6 }),
-  ],
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ message: errors.array() });
-    }
-
-    const { email, password } = req.body;
-    try {
-      const user = await User.findOne({ email });
-      if (!user) {
-        return res.status(400).json({ message: "Invalid Credentials" });
+      const { email, password } = req.body;
+      try {
+        // Adjust query depending on your actual DB model or ORM
+        const userQuery = "SELECT * FROM users WHERE email = ?";
+        connection.query(userQuery, [email], async (err, results) => {
+          if (err) {
+            console.log(err);
+            return res.status(500).json({ message: "Something went wrong" });
+          }
+  
+          const user = results[0];
+          if (!user) {
+            return res.status(400).json({ message: "Invalid Credentials" });
+          }
+  
+          // Compare password with hashed password in the database
+          const isMatch = await bcrypt.compare(password, user.password);
+          if (!isMatch) {
+            return res.status(400).json({ message: "Invalid Credentials" });
+          }
+          console.log(user)
+          // Log userId and userRole before responding
+          console.log("User ID: ", user.id_user);
+          console.log("User Role: ", user.role);
+  
+          // Generate JWT token
+          const token = jwt.sign(
+            { userId: user.id_user, userRole: user.role }, // Including userRole in the JWT payload
+            process.env.JWT_SECRET_KEY,
+            { expiresIn: "1d" }
+          );
+  
+          // Set JWT token as an HttpOnly cookie
+          res.cookie("auth_token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production", // Use true for HTTPS in production
+            maxAge: 86400000, // 1 day in milliseconds
+          });
+  
+          // Respond with user data (excluding password) and include userRole
+          res.status(200).json({
+            userId: user.id,
+            userRole: user.role, // Include userRole in the response
+            message: `Login successful ${user.id_user} & ${user.role}`,
+          });
+        });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Something went wrong" });
       }
-
-      // Compare password with hashed password in the database
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) {
-        return res.status(400).json({ message: "Invalid Credentials" });
-      }
-
-      // Generate JWT token
-      const token = jwt.sign(
-        { userId: user.id, isAdmin: user.isAdmin },
-        process.env.JWT_SECRET_KEY,
-        { expiresIn: "1d" }
-      );
-
-      // Set JWT token as an HttpOnly cookie
-      res.cookie("auth_token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Only true in production for HTTPS
-        maxAge: 86400000, // 1 day in milliseconds
-      });
-
-      // Respond with user data (without password)
-      res.status(200).json({ userId: user.id, isAdmin: user.isAdmin });
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: "Something went wrong" });
     }
-  }
-);
+  );
+  
 
 // Token validation endpoint
-router.get("/auth/validate-token", verifyToken, (req, res) => {
+router.get("/validate-token", verifyToken, (req, res) => {
   // Decode the token and send user info
   const token = req.cookies["auth_token"];
   const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+  // let decode = jwt.verify(token, process.env.JWT_SECRET_KEY as string) as JwtPayload;
+
   res.status(200).json({
     userId: req.userId,
-    isAdmin: decoded.isAdmin,
+    userRole: decoded.userRole,
     token,
   });
 });
@@ -159,11 +176,12 @@ router.post("/logout", (req, res) => {
 
 
 
-router.get("/validate-token", validateToken, (req, res) => {
-  res.status(200).json({
-    message: "Token is valid",
-    userId: req.user.userId,
-  });
-});
+// router.get("/validate-token", validateToken, (req, res) => {
+//   res.status(200).json({
+//     message: "Token is valid",
+//     userId: req.user.userId,
+//     userRole : req.user.role
+//   });
+// });
 
 module.exports = router;

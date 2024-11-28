@@ -10,10 +10,9 @@ export type SignInFormData = {
 };
 
 const SignIn = () => {
-  const { showToast } = useAppContext();
+  const { showToast, setUserData } = useAppContext(); // Get setUserData from context
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-
   const location = useLocation();
 
   const {
@@ -22,10 +21,18 @@ const SignIn = () => {
     handleSubmit,
   } = useForm<SignInFormData>();
 
+  // Mutation to call the sign-in API
   const mutation = useMutation(apiClient.signIn, {
-    onSuccess: async () => {
+    onSuccess: async (data) => {
+      const { id_user, role } = data; // Extract user data from the response
+      setUserData(id_user, role); // Store user data in context
+
       showToast({ message: "Sign in Successful!", type: "SUCCESS" });
+
+      // Invalidate token validation cache to refresh the user data
       await queryClient.invalidateQueries("validateToken");
+
+      // Navigate to the original location or home page
       navigate(location.state?.from?.pathname || "/");
     },
     onError: (error: Error) => {
@@ -33,13 +40,14 @@ const SignIn = () => {
     },
   });
 
+  // Handle form submission
   const onSubmit = handleSubmit((data) => {
-    mutation.mutate(data);
+    mutation.mutate(data);  // Call sign-in API
   });
 
   return (
     <form className="flex flex-col gap-5" onSubmit={onSubmit}>
-      <h2 className="text-3xl font-bold">Sign In</h2>
+      <h2 className="text-3xl font-bold">Đăng nhập</h2>
       <label className="text-gray-700 text-sm font-bold flex-1">
         Email
         <input
@@ -52,7 +60,7 @@ const SignIn = () => {
         )}
       </label>
       <label className="text-gray-700 text-sm font-bold flex-1">
-        Password
+        Mật khẩu
         <input
           type="password"
           className="border rounded w-full py-1 px-2 font-normal"
@@ -70,16 +78,16 @@ const SignIn = () => {
       </label>
       <span className="flex items-center justify-between">
         <span className="text-sm">
-          Not Registered?{" "}
+          Chưa có tài khoản?{" "}
           <Link className="underline" to="/register">
-            Create an account here
+            Đăng ký tại đây
           </Link>
         </span>
         <button
           type="submit"
           className="bg-blue-600 text-white p-2 font-bold hover:bg-blue-500 text-xl"
         >
-          Login
+          Đăng nhập
         </button>
       </span>
     </form>

@@ -1,8 +1,6 @@
 const express = require('express');
 const { check, validationResult } = require('express-validator');
 const connection = require('../config/database'); // Import kết nối MySQL
-// const jwt = require('jsonwebtoken');
-// const bcrypt = require('bcrypt'); // Import bcrypt
 const verifyToken = require("../middleware/auth");
 const User = require('../models/user');
 const jwt = require('jsonwebtoken'); // Add this line at the top of your file
@@ -47,6 +45,7 @@ router.post('/', (req, res) => {
     res.status(201).json({ message: 'Người dùng được tạo thành công', userId: results.insertId });
   });
 });
+
 router.post(
   "/register",
   [
@@ -108,15 +107,7 @@ router.post(
     }
   }
 );
-
-
-
-router.get("/hello", (req, res) => {
-  return res.status(200).send("Hello, World!");
-});
-
 // Login user endpoint
-
 router.post(
   "/login",
   [
@@ -149,10 +140,14 @@ router.post(
         if (!isMatch) {
           return res.status(400).json({ message: "Invalid Credentials" });
         }
+        console.log(user)
+        // Log userId and userRole before responding
+        console.log("User ID: ", user.id_user);
+        console.log("User Role: ", user.role);
 
         // Generate JWT token
         const token = jwt.sign(
-          { userId: user.id, isAdmin: user.isAdmin },
+          { userId: user.id_user, userRole: user.role }, // Including userRole in the JWT payload
           process.env.JWT_SECRET_KEY,
           { expiresIn: "1d" }
         );
@@ -164,11 +159,11 @@ router.post(
           maxAge: 86400000, // 1 day in milliseconds
         });
 
-        // Respond with user data (excluding password)
+        // Respond with user data (excluding password) and include userRole
         res.status(200).json({
           userId: user.id,
-          isAdmin: user.isAdmin,
-          message: "Login successful",
+          userRole: user.role, // Include userRole in the response
+          message: `Login successful ${user.id_user} & ${user.role}`,
         });
       });
     } catch (error) {
@@ -178,6 +173,8 @@ router.post(
   }
 );
 
+
+
 // Token validation endpoint
 router.get("/auth/validate-token", verifyToken, (req, res) => {
 // Decode the token and send user info
@@ -185,9 +182,10 @@ const token = req.cookies["auth_token"];
 const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
 res.status(200).json({
   userId: req.userId,
-  isAdmin: decoded.isAdmin,
+  userRole: req.role,
   token,
 });
+
 });
 // Cập nhật người dùng
 router.put('/:id', (req, res) => {
@@ -220,80 +218,5 @@ router.delete('/:id', (req, res) => {
     res.status(200).json({ message: 'Người dùng được xóa thành công' });
   });
 });
-
-// Định tuyến đăng ký người dùng
-// router.post(
-//   '/register',
-//   [
-//     check('firstName', 'First Name is required').isString(),
-//     check('lastName', 'Last Name is required').isString(),
-//     check('email', 'Email is required').isEmail(),
-//     check('password', 'Password with 6 or more characters required').isLength({
-//       min: 6,
-//     }),
-//   ],
-//   async (req, res) => {
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//       return res.status(400).json({ message: errors.array() });
-//     }
-
-//     const { firstName, lastName, email, password } = req.body;
-
-//     try {
-//       // Kiểm tra xem email có tồn tại trong cơ sở dữ liệu không
-//       connection.query(
-//         'SELECT * FROM users WHERE email = ?',
-//         [email],
-//         async (err, results) => {
-//           if (err) {
-//             return res.status(500).json({ message: 'Error checking email', error: err });
-//           }
-
-//           if (results.length > 0) {
-//             return res.status(400).json({ message: 'User already exists' });
-//           }
-
-//           // Mã hóa mật khẩu trước khi lưu vào DB
-//           const hashedPassword = await bcrypt.hash(password, 10);
-
-//           // Nếu người dùng chưa tồn tại, thêm mới vào cơ sở dữ liệu
-//           const query = 'INSERT INTO users (first_name, last_name, email, password, role, create_at) VALUES (?, ?, ?, ?, ?, ?)';
-//           const role = 0; // Default role
-//           const createAt = new Date();
-
-//           connection.query(
-//             query,
-//             [firstName, lastName, email, hashedPassword, role, createAt],
-//             (err, results) => {
-//               if (err) {
-//                 return res.status(500).json({ message: 'Error inserting user', error: err });
-//               }
-
-//               // Tạo JWT Token
-//               const token = jwt.sign(
-//                 { userId: results.insertId },
-//                 process.env.JWT_SECRET_KEY,
-//                 { expiresIn: '1d' }
-//               );
-
-//               // Gửi token qua cookie
-//               res.cookie('auth_token', token, {
-//                 httpOnly: true,
-//                 secure: process.env.NODE_ENV === 'production',
-//                 maxAge: 86400000, // 1 ngày
-//               });
-
-//               return res.status(200).json({ message: 'User registered OK' });
-//             }
-//           );
-//         }
-//       );
-//     } catch (error) {
-//       console.log(error);
-//       res.status(500).send({ message: 'Something went wrong' });
-//     }
-//   }
-// );
 
 module.exports = router;

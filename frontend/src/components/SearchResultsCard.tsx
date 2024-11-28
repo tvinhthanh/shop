@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { HotelType } from "../../../backend/src/shared/types";
+// import { HotelType } from "../../../backend/src/shared/types";
 import { AiFillStar } from "react-icons/ai";
-type Props = {
-  hotel: HotelType;
-};
+// type Props = {
+//   hotel: HotelType;
+// };
 
 const SearchResultsCard = ({ hotel }: Props) => {
   return (

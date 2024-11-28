@@ -3,28 +3,29 @@ import * as apiClient from "../api-client";
 import LatestDestinationCard from "../components/LastestDestinationCard";
 
 const Home = () => {
-  const { data: hotels } = useQuery("fetchQuery", () =>
+  const { data: hotels, isLoading, isError } = useQuery("fetchQuery", () =>
     apiClient.fetchHotels()
   );
 
-  const topRowHotels = hotels?.slice(0, 2) || [];
-  const bottomRowHotels = hotels?.slice(2) || [];
+  // Handle loading and error states
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError || !hotels) {
+    return <div>Something went wrong. Please try again later.</div>;
+  }
 
   return (
     <div className="space-y-3">
-      <h2 className="text-3xl font-bold">Latest Destinations</h2>
-      <p>Most recent desinations added by our hosts</p>
-      <div className="grid gap-4">
-        <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
-          {topRowHotels.map((hotel) => (
-            <LatestDestinationCard hotel={hotel} />
-          ))}
-        </div>
-        <div className="grid md:grid-cols-3 gap-4">
-          {bottomRowHotels.map((hotel) => (
-            <LatestDestinationCard hotel={hotel} />
-          ))}
-        </div>
+      <h2 className="text-3xl font-bold">Điểm đến mới nhất</h2>
+      <p>Các điểm đến gần đây nhất</p>
+
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+        {/* Loop through all hotels and display them */}
+        {hotels.map((hotel) => (
+          <LatestDestinationCard key={hotel._id} hotel={hotel} />
+        ))}
       </div>
     </div>
   );
