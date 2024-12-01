@@ -177,6 +177,46 @@ export const fetchRoom = async (hotelId: string, roomId: string) => {
   }
 };
 
+export const updateRoom = async (roomId: string, formData: FormData) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/room/${roomId}`, {
+      method: "PUT", // Sử dụng PUT để cập nhật phòng
+      headers: {
+        // Thêm các header nếu cần, ví dụ như Authorization
+        // "Authorization": `Bearer ${yourToken}`,
+      },
+      body: formData, // Gửi formData chứa dữ liệu cần cập nhật
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error updating room: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log("Room updated successfully:", data); // Kiểm tra dữ liệu trả về
+    return data;
+  } catch (error) {
+    console.error("Error updating room:", error);
+    throw error;
+  }
+};
+
+export const getRoomById = async (roomId: string) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/room/${roomId}`);
+    
+    if (!response.ok) {
+      throw new Error(`Error fetching room by ID: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log("Fetched room data:", data); // Kiểm tra dữ liệu trả về
+    return data;
+  } catch (error) {
+    console.error("Error fetching room by ID:", error);
+    throw error;
+  }
+};
 
 export const fetchMyHotels = async (userId: string): Promise<HotelType[]> => {
   const response = await fetch(`${API_BASE_URL}/api/hotel/user/${userId}`, {

@@ -85,17 +85,17 @@ const MyRooms = () => {
             >
               <h2 className="text-2xl font-semibold">{room.room_type}</h2>
               <div className="text-sm text-gray-600">
-  {(() => {
-    try {
-      return Array.isArray(room.facilities)
-        ? room.facilities.join(", ")
-        : JSON.parse(room.facilities).join(", ");
-    } catch (error) {
-      console.error("Error parsing facilities:", error);
-      return "Thông tin tiện ích không hợp lệ";
-    }
-  })()}
-</div>
+            {(() => {
+              try {
+                return Array.isArray(room.facilities)
+                  ? room.facilities.join(", ")
+                  : JSON.parse(room.facilities).join(", ");
+              } catch (error) {
+                console.error("Error parsing facilities:", error);
+                return "Thông tin tiện ích không hợp lệ";
+              }
+            })()}
+          </div>
               <div className="w-full h-48 bg-gray-200 rounded-lg overflow-hidden mb-4">
                 {/* Kiểm tra xem image_urls có phải là mảng hợp lệ hay không */}
                 {Array.isArray(images) && images.length > 0 ? (
