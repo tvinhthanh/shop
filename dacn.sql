@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `bookings` (
   KEY `hotel_id` (`hotel_id`),
   KEY `room_id` (`room_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
