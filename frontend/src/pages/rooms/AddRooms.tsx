@@ -47,7 +47,7 @@ const AddRoom: React.FC = () => {
   const [childCount, setChildCount] = useState(0);
   const [facilities, setFacilities] = useState<string[]>([]);
   const [images, setImages] = useState<File[]>([]);
-  const [availabilityStatus, setAvailabilityStatus] = useState(0);  // Track availability status
+  const [availabilityStatus, setAvailabilityStatus] = useState(1);  // Track availability status
   const navigate = useNavigate();
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {

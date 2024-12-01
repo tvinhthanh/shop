@@ -127,11 +127,11 @@ const MyHotels = () => {
               Xem các phòng
             </Link>
             <button
-    onClick={() => handleDelete(hotel.hotel_id)}  // Function to handle the delete action
-    className="flex bg-red-600 text-white text-xl font-bold p-2 hover:bg-red-500"
-  >
-    Xóa khách sạn
-  </button>
+              onClick={() => handleDelete(hotel.hotel_id)}  // Function to handle the delete action
+              className="flex bg-red-600 text-white text-xl font-bold p-2 hover:bg-red-500"
+            >
+              Xóa khách sạn
+            </button>
           </span>
 
           </div>

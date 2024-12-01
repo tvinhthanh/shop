@@ -98,16 +98,16 @@ const authRoutes = require('./routes/auth');
 const hotelRoutes = require('./routes/hotel');
 const MyHotelRoutes = require('./routes/myhotel');
 const roomRoutes = require('./routes/room');
+const bookingRoutes = require('./routes/booking');
 
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/hotel', hotelRoutes);
 app.use('/api/my-hotels', MyHotelRoutes);
 app.use('/api/room', roomRoutes);
+app.use('/api/bookings', bookingRoutes);
 
-// Route to handle image upload and save it to Cloudinary
-// Remove the static file serving line
-// app.use('/images', express.static(path.join(__dirname, 'uploads'))); // Remove this line
+
 
 // Modify the '/upload-image' route to return the Cloudinary URL
 app.post('/upload-image', upload.single('image'), (req, res) => {

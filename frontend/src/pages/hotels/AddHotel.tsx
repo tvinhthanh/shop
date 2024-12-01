@@ -42,6 +42,7 @@ const AddHotel: React.FC = () => {
   const [country, setCountry] = useState('');
   const [rating, setRating] = useState('');
   const [image, setImage] = useState<File | null>(null); // State for image file
+  const [room, setRoom] = useState(0); // State for the number of rooms
 
   const navigate = useNavigate();
   console.log('User ID:', userId); // Log to see if userId is correct
@@ -77,6 +78,7 @@ const AddHotel: React.FC = () => {
     formData.append('country', country);
     formData.append('rating', rating);
     formData.append('phone', phone);
+    formData.append('room', String(room)); // Send room count without modifying it
   
     // Append image only if selected
     if (image) {
@@ -98,11 +100,11 @@ const AddHotel: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-6">Add Hotel</h1>
+      <h1 className="text-2xl font-bold mb-6">Thêm Khách Sạn</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="flex flex-col">
           <label htmlFor="name" className="text-sm font-semibold">
-            Name:
+            Tên:
           </label>
           <input
             id="name"
@@ -115,7 +117,7 @@ const AddHotel: React.FC = () => {
         </div>
         <div className="flex flex-col">
           <label htmlFor="address" className="text-sm font-semibold">
-            Address:
+            Địa chỉ:
           </label>
           <input
             id="address"
@@ -128,7 +130,7 @@ const AddHotel: React.FC = () => {
         </div>
         <div className="flex flex-col">
           <label htmlFor="city" className="text-sm font-semibold">
-            City:
+            Thành phố:
           </label>
           <input
             id="city"
@@ -141,7 +143,7 @@ const AddHotel: React.FC = () => {
         </div>
         <div className="flex flex-col">
           <label htmlFor="country" className="text-sm font-semibold">
-            Country:
+            Quốc gia:
           </label>
           <input
             id="country"
@@ -154,7 +156,7 @@ const AddHotel: React.FC = () => {
         </div>
         <div className="flex flex-col">
           <label htmlFor="phone" className="text-sm font-semibold">
-            Phone:
+            SĐT:
           </label>
           <input
             id="phone"
@@ -167,7 +169,7 @@ const AddHotel: React.FC = () => {
         </div>
         <div className="flex flex-col">
           <label htmlFor="rating" className="text-sm font-semibold">
-            Rating:
+            Đánh Giá:
           </label>
           <input
             id="rating"
@@ -182,7 +184,7 @@ const AddHotel: React.FC = () => {
         {/* Add image input */}
         <div className="flex flex-col">
           <label htmlFor="image" className="text-sm font-semibold">
-            Image:
+            Hình ảnh:
           </label>
           <input
             id="image"
@@ -197,7 +199,7 @@ const AddHotel: React.FC = () => {
           type="submit"
           className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
         >
-          Add Hotel
+          Thêm khách sạn
         </button>
       </form>
     </div>

@@ -68,6 +68,7 @@ const App = () => {
                 <Route path="/my-bookings" element={<Layout><MyBookings /></Layout>} />
                 <Route path="/rooms/:hotelId" element={<Layout><ViewRoom /></Layout>} />
                 <Route path="/rooms/:hotelId/:roomId" element={<Layout><RoomDetail /></Layout>} />
+                <Route path="/bookings/:hotelId/:roomId" element={<Layout><Booking /></Layout>} />
               </>
             )}
 

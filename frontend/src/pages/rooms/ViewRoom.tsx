@@ -116,9 +116,15 @@ const ViewRoom = () => {
                 </div>
               </div>
               <div className="flex justify-end">
-
               <Link
                 to={`/rooms/${room.hotel_id}/${room.room_id}`} // Đường dẫn đến trang chỉnh sửa phòng
+                className="flex bg-blue-600 text-white text-xl font-bold p-2 hover:bg-blue-500"
+              >
+                Xem chi tiết phòng
+              </Link>
+
+              <Link
+                to={`/bookings/${room.hotel_id}/${room.room_id}`} // Đường dẫn đến trang chỉnh sửa phòng
                 className="flex bg-blue-600 text-white text-xl font-bold p-2 hover:bg-blue-500"
               >
                 Đặt lịch ngay
