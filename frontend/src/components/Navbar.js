@@ -43,6 +43,14 @@ const Navbar = () => {
               Liên Hệ
             </a>
           </li>
+          <li>
+            <a
+              href="/login"
+              className="hover:text-green-400 transition duration-200"
+            >
+              Đăng nhập
+            </a>
+          </li>
         </ul>
 
         {/* Mobile Menu Icon */}

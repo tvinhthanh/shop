@@ -1,8 +1,9 @@
-/** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./src/**/*.{js,jsx,ts,tsx}'], // Đường dẫn để Tailwind quét file
+  content: [
+    "./src/**/*.{html,js,jsx,ts,tsx}",  // Include all JS, JSX, TS, TSX files
+  ],
   theme: {
-    extend: {}, // Thêm tuỳ chỉnh (nếu cần)
+    extend: {},
   },
   plugins: [],
 };

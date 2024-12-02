@@ -1,6 +1,10 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const cors = require('cors');  // Import the CORS package
 dotenv.config();
+
+// Define allowed origins
+const allowedOrigins = ['http://localhost:3000', 'http://your-frontend-url.com']; // Add your allowed origins here
 
 // Import routes
 const productRoutes = require('./routes/product');
@@ -17,6 +21,17 @@ const port = process.env.PORT || 3000;
 
 // Middleware to parse JSON
 app.use(express.json());
+
+// Enable CORS for all routes with a dynamic origin check
+app.use(cors({
+  origin: (origin, callback) => {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true); // Allow the origin
+    } else {
+      callback(new Error('Not allowed by CORS')); // Deny the origin
+    }
+  }
+}));
 
 // Routes
 app.use('/api/products', productRoutes);
