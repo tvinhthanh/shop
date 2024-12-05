@@ -23,9 +23,9 @@ const SignOutButton = () => {
   return (
     <button
       onClick={handleClick}
-      className="text-blue-600 px-3 font-bold bg-white hover:bg-gray-100 "
+      className="hover:text-red-400 transition duration-200 "
     >
-      Sign Out
+      Đăng xuất
     </button>
   );
 };

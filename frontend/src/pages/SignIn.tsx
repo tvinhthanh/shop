@@ -46,24 +46,24 @@ const SignIn = () => {
   });
 
   return (
-    <form className="flex flex-col gap-5" onSubmit={onSubmit}>
-      <h2 className="text-3xl font-bold">Đăng nhập</h2>
-      <label className="text-gray-700 text-sm font-bold flex-1">
+    <form className="flex flex-col gap-3 p-4 max-w-sm mx-auto" onSubmit={onSubmit}>
+      <h2 className="text-xl font-bold text-center mb-4">Đăng nhập</h2>
+      <label className="text-gray-700 text-xs font-semibold">
         Email
         <input
           type="email"
-          className="border rounded w-full py-1 px-2 font-normal"
+          className="border rounded w-full py-1 px-2 mt-1 text-sm"
           {...register("email", { required: "This field is required" })}
         ></input>
         {errors.email && (
-          <span className="text-red-500">{errors.email.message}</span>
+          <span className="text-red-500 text-xs">{errors.email.message}</span>
         )}
       </label>
-      <label className="text-gray-700 text-sm font-bold flex-1">
+      <label className="text-gray-700 text-xs font-semibold mt-3">
         Mật khẩu
         <input
           type="password"
-          className="border rounded w-full py-1 px-2 font-normal"
+          className="border rounded w-full py-1 px-2 mt-1 text-sm"
           {...register("password", {
             required: "This field is required",
             minLength: {
@@ -73,19 +73,19 @@ const SignIn = () => {
           })}
         ></input>
         {errors.password && (
-          <span className="text-red-500">{errors.password.message}</span>
+          <span className="text-red-500 text-xs">{errors.password.message}</span>
         )}
       </label>
-      <span className="flex items-center justify-between">
+      <span className="flex items-center justify-between mt-3 text-xs">
         <span className="text-sm">
           Chưa có tài khoản?{" "}
-          <Link className="underline" to="/register">
+          <Link className="underline text-black-600" to="/register">
             Đăng ký tại đây
           </Link>
         </span>
         <button
           type="submit"
-          className="bg-blue-600 text-white p-2 font-bold hover:bg-blue-500 text-xl"
+          className="bg-black text-white p-2 font-semibold hover:bg-blue-500 text-sm rounded"
         >
           Đăng nhập
         </button>

@@ -24,9 +24,19 @@ export type UserType = {
     lastUpdated: Date;
     bookings: BookingType[];
   };
+  export type StoreType = {
+    store_id: string;
+    _id: string;
+    store_name: string;  
+    user_id: string;     
+    address: string;     
+    image: string;      
+    description: string;
+    lastUpdated: Date;
+  };
   
   export type BookingType = {
-    _id: string;
+    storeId: string;
     userId: string;
     firstName: string;
     lastName: string;

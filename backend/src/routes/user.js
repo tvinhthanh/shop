@@ -107,6 +107,7 @@ router.post(
     }
   }
 );
+
 // Login user endpoint
 router.post(
   "/login",

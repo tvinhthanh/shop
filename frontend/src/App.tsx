@@ -7,27 +7,23 @@ import {
 import Layout from "./layouts/Layout";
 import Register from "./pages/Register";
 import SignIn from "./pages/SignIn";
-import AddHotel from "./pages/hotels/AddHotel";
 import { useAppContext } from "./contexts/AppContext";
-import MyHotels from "./pages/hotels/MyHotels";
-import EditHotel from "./pages/hotels/EditHotel";
 import Search from "./pages/Search";
 import Detail from "./pages/Detail";
-import Booking from "./pages/bookings/Booking";
-import MyBookings from "./pages/bookings/MyBookings";
 import Home from "./pages/Home";
-import MyRoom from "./pages/rooms/MyRooms";
-import RoomDetail from "./pages/rooms/RoomDetail";
 import InvoiceManager from "./pages/admin/InvoiceManager";
 import HotelManager from "./pages/admin/HotelManager";
 import UserManager from "./pages/admin/UserManager";
 import Admin from "./pages/admin/Admin";
-import AddRoom from "./pages/rooms/AddRooms";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
-import ViewHotels from "./pages/hotels/ViewHotel";
-import ViewRoom from "./pages/rooms/ViewRoom";
-import EditRoom from "./pages/rooms/EditRooms";
+import MyStore from "./pages/store/MyStore";
+import AddStore from "./pages/store/AddStore";
+import EditStore from "./pages/store/EditStore";
+import Danhmuc from "./pages/danhmuc/Danhmuc";
+import ThemDanhmuc from "./pages/danhmuc/ThemDanhmuc";
+import Sanpham from "./pages/products/Sanpham";
+import Themsp from "./pages/products/Themsanpham";
 
 const App = () => {
   const { isLoggedIn, userRole, userId } = useAppContext();
@@ -40,7 +36,7 @@ const App = () => {
         <Route path="/search" element={<Layout><Search /></Layout>} />
         <Route path="/detail/:hotelId" element={<Layout><Detail /></Layout>} />
         <Route path="/register" element={<Layout><Register /></Layout>} />
-        <Route path="/sign-in" element={<Layout><SignIn /></Layout>} />
+        <Route path="/login" element={<Layout><SignIn /></Layout>} />
 
         {/* Protected Routes - userRole-based Access */}
         {isLoggedIn
@@ -49,27 +45,22 @@ const App = () => {
             {/* userRole 1 - User userRole 1 */}
             {userRole == "1" && (
               <>
-                <Route path="/my-hotels" element={<Layout><MyHotels /></Layout>} />
-                <Route path="/my-bookings" element={<Layout><MyBookings /></Layout>} />
-                <Route path="/my-rooms" element={<Layout><MyRoom /></Layout>} />
-                <Route path="/my-rooms/:roomId" element={<Layout><RoomDetail /></Layout>} />
-                <Route path="/my-hotel/:hotelId" element={<Layout><MyHotels /></Layout>} />
-                <Route path="/add-hotel" element={<Layout><AddHotel /></Layout>} />
-                <Route path="/edit-hotel/:hotelId" element={<Layout><EditHotel /></Layout>} />
-                <Route path="/room/:hotelId" element={<Layout><MyRoom /></Layout>} />
-                <Route path="/hotel/:hotelId/add-room" element={<Layout><AddRoom /></Layout>} />
-                <Route path="/edit-room/:roomId" element={<Layout><EditRoom /></Layout>} />
+                <Route path="/store" element={<Layout><MyStore /></Layout>} />
+                <Route path="/add-store" element={<Layout><AddStore /></Layout>} />
+                <Route path="/edit-store/:storeId" element={<Layout><EditStore /></Layout>} />
+                <Route path="/categories" element={<Layout><Danhmuc /></Layout>} />
+                <Route path="/:storeId/add-danhmuc" element={<Layout><ThemDanhmuc /></Layout>} />
+                <Route path="/sanpham" element={<Layout><Sanpham /></Layout>} />
+                <Route path="/themsanpham" element={<Layout><Themsp /></Layout>} />
+
                 </>
             )}
 
             {/* userRole 2 - User userRole 2 */}
             {userRole == "2" && (
               <>
-                <Route path="/hotel" element={<Layout><ViewHotels /></Layout>} />
-                <Route path="/my-bookings" element={<Layout><MyBookings /></Layout>} />
-                <Route path="/rooms/:hotelId" element={<Layout><ViewRoom /></Layout>} />
-                <Route path="/rooms/:hotelId/:roomId" element={<Layout><RoomDetail /></Layout>} />
-                <Route path="/bookings/:hotelId/:roomId" element={<Layout><Booking /></Layout>} />
+                <Route path="/categories" element={<Layout><Danhmuc /></Layout>} />
+
               </>
             )}
 

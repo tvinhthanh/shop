@@ -20,7 +20,9 @@ type AppContext = {
   stripePromise: Promise<Stripe | null>;
   userId: string | null;
   userRole: string | null;
+  storeId: string | null;  // Added storeId to context
   setUserData: (id: string, userRole: string) => void; // Function to set user data in context
+  setStoreId: (storeId: string) => void; // Function to set storeId in context
 };
 
 const AppContext = React.createContext<AppContext | undefined>(undefined);
@@ -31,7 +33,8 @@ const stripePromise = STRIPE_PUB_KEY ? loadStripe(STRIPE_PUB_KEY) : Promise.reso
 export const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [toast, setToast] = useState<ToastMessage | undefined>(undefined);
   const [userId, setUserId] = useState<string | null>(null);
-  const [userRole, setUseruserRole] = useState<string | null>(null);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [storeId, setStoreId] = useState<string | null>(null); // Added setter function for storeId
 
   // Query to validate the token and get user information
   const { isError, isLoading, data } = useQuery("validateToken", apiClient.validateToken, {
@@ -39,10 +42,24 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
     onSuccess: (data) => {
       if (data?.userId && data?.userRole) {
         setUserId(data.userId); // Set userId after successful token validation
-        setUseruserRole(data.userRole); // Set useruserRole after successful token validation
+        setUserRole(data.userRole); // Set userRole after successful token validation
       }
     },
   });
+
+  // Query to fetch store based on userId
+  const { data: storeData } = useQuery(
+    "fetchStore",
+    () => apiClient.fetchMyStores(userId ?? ""),
+    {
+      enabled: !!userId, // Only run if userId is available
+      onSuccess: (data) => {
+        if (data && data.length > 0) {
+          setStoreId(data[0].store_id); // Set the first store's ID
+        }
+      },
+    }
+  );
 
   // Determine if the user is logged in based on the error/loading state
   const isLoggedIn = !isError && !isLoading;
@@ -50,8 +67,11 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
   // Function to update user data in context
   const setUserData = (id: string, userRole: string) => {
     setUserId(id);
-    setUseruserRole(userRole);
+    setUserRole(userRole);
   };
+
+  console.log(userId);
+    console.log(storeId);
 
   return (
     <AppContext.Provider
@@ -63,6 +83,8 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
         stripePromise, // Stripe promise for payment integration
         userId, // User ID from the context
         userRole, // User userRole from the context
+        storeId, // Current storeId
+        setStoreId, // Function to set storeId
         setUserData, // Set user data function for updating the context
       }}
     >

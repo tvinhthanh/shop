@@ -45,46 +45,46 @@ const Register = () => {
   });
 
   return (
-    <form className="flex flex-col gap-5" onSubmit={onSubmit}>
-      <h2 className="text-3xl font-bold">Tạo tài khoản</h2>
-      <div className="flex flex-col md:flex-row gap-5">
-        <label className="text-gray-700 text-sm font-bold flex-1">
+    <form className="flex flex-col gap-4 p-4 max-w-md mx-auto" onSubmit={onSubmit}>
+      <h2 className="text-xl font-bold text-center mb-3">Tạo tài khoản</h2>
+      <div className="flex flex-col md:flex-row gap-4">
+        <label className="text-gray-700 text-xs font-semibold flex-1">
           Họ
           <input
-            className="border rounded w-full py-1 px-2 font-normal"
+            className="border rounded w-full py-1 px-2 text-sm"
             {...register("firstName", { required: "This field is required" })}
           />
           {errors.firstName && (
-            <span className="text-red-500">{errors.firstName.message}</span>
+            <span className="text-red-500 text-xs">{errors.firstName.message}</span>
           )}
         </label>
-        <label className="text-gray-700 text-sm font-bold flex-1">
+        <label className="text-gray-700 text-xs font-semibold flex-1">
           Tên
           <input
-            className="border rounded w-full py-1 px-2 font-normal"
+            className="border rounded w-full py-1 px-2 text-sm"
             {...register("lastName", { required: "This field is required" })}
           />
           {errors.lastName && (
-            <span className="text-red-500">{errors.lastName.message}</span>
+            <span className="text-red-500 text-xs">{errors.lastName.message}</span>
           )}
         </label>
       </div>
-      <label className="text-gray-700 text-sm font-bold flex-1">
+      <label className="text-gray-700 text-xs font-semibold">
         Email
         <input
           type="email"
-          className="border rounded w-full py-1 px-2 font-normal"
+          className="border rounded w-full py-1 px-2 text-sm"
           {...register("email", { required: "This field is required" })}
         />
         {errors.email && (
-          <span className="text-red-500">{errors.email.message}</span>
+          <span className="text-red-500 text-xs">{errors.email.message}</span>
         )}
       </label>
-      <label className="text-gray-700 text-sm font-bold flex-1">
+      <label className="text-gray-700 text-xs font-semibold">
         Số điện thoại
         <input
           type="tel"
-          className="border rounded w-full py-1 px-2 font-normal"
+          className="border rounded w-full py-1 px-2 text-sm"
           {...register("phone", {
             required: "This field is required",
             pattern: {
@@ -94,14 +94,14 @@ const Register = () => {
           })}
         />
         {errors.phone && (
-          <span className="text-red-500">{errors.phone.message}</span>
+          <span className="text-red-500 text-xs">{errors.phone.message}</span>
         )}
       </label>
-      <label className="text-gray-700 text-sm font-bold flex-1">
+      <label className="text-gray-700 text-xs font-semibold">
         Mật khẩu
         <input
           type="password"
-          className="border rounded w-full py-1 px-2 font-normal"
+          className="border rounded w-full py-1 px-2 text-sm"
           {...register("password", {
             required: "This field is required",
             minLength: {
@@ -111,14 +111,14 @@ const Register = () => {
           })}
         />
         {errors.password && (
-          <span className="text-red-500">{errors.password.message}</span>
+          <span className="text-red-500 text-xs">{errors.password.message}</span>
         )}
       </label>
-      <label className="text-gray-700 text-sm font-bold flex-1">
+      <label className="text-gray-700 text-xs font-semibold">
         Nhập lại mật khẩu
         <input
           type="password"
-          className="border rounded w-full py-1 px-2 font-normal"
+          className="border rounded w-full py-1 px-2 text-sm"
           {...register("confirmPassword", {
             validate: (val) => {
               if (!val) {
@@ -130,44 +130,42 @@ const Register = () => {
           })}
         />
         {errors.confirmPassword && (
-          <span className="text-red-500">{errors.confirmPassword.message}</span>
+          <span className="text-red-500 text-xs">{errors.confirmPassword.message}</span>
         )}
       </label>
-      <label className="text-gray-700 text-sm font-bold flex-1">
+      <label className="text-gray-700 text-xs font-semibold">
         Địa chỉ
         <input
           type="text"
-          className="border rounded w-full py-1 px-2 font-normal"
+          className="border rounded w-full py-1 px-2 text-sm"
           {...register("address", { required: "This field is required" })}
         />
         {errors.address && (
-          <span className="text-red-500">{errors.address.message}</span>
+          <span className="text-red-500 text-xs">{errors.address.message}</span>
         )}
       </label>
       
       {/* Chọn vai trò người dùng */}
-      <label className="text-gray-700 text-sm font-bold">
+      <label className="text-gray-700 text-xs font-semibold">
         Vai trò
         <select
-          className="border rounded w-full py-1 px-2 font-normal"
+          className="border rounded w-full py-1 px-2 text-sm"
           {...register("role", { required: "Please select a role" })}
         >
           <option value="1">Chủ khách sạn</option>
           <option value="2">Người dùng</option>
         </select>
         {errors.role && (
-          <span className="text-red-500">{errors.role.message}</span>
+          <span className="text-red-500 text-xs">{errors.role.message}</span>
         )}
       </label>
       
-      <span>
-        <button
-          type="submit"
-          className="bg-blue-600 text-white p-2 font-bold hover:bg-blue-500 text-xl"
-        >
-          Tạo Tài Khoản
-        </button>
-      </span>
+      <button
+        type="submit"
+        className="bg-black text-white p-2 font-semibold hover:bg-gray-800 text-lg rounded mt-4"
+      >
+        Tạo Tài Khoản
+      </button>
     </form>
   );
 };

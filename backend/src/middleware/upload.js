@@ -19,22 +19,21 @@ const uploadToCloudinary = (file) => {
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
-        resource_type: 'auto',  // Cloudinary will auto-detect the resource type (image, video, etc.)
-        folder: 'uploads',      // Optional: Store images in a specific folder on Cloudinary
-        // Removed public_id here to let Cloudinary generate it automatically
+        resource_type: 'auto',  // Automatically detects the resource type (image, video, etc.)
+        folder: 'uploads',      // Optional: Store the image in a specific folder
       },
       (error, result) => {
         if (error) {
-          console.error("Error uploading image to Cloudinary:", error); // Log the error
-          reject(error);  // Reject the promise if error occurs
+          console.error("Error uploading image to Cloudinary:", error);
+          reject(error);  // Reject the promise on error
         } else {
-          console.log("Image uploaded successfully:", result); // Log the successful upload result
-          resolve(result);  // Return the result, which includes the image URL and other info
+          console.log("Image uploaded successfully:", result);
+          resolve(result);  // Resolve with the result (includes image URL)
         }
       }
     );
     
-    // Upload the file buffer directly to Cloudinary
+    // End the stream by uploading the file buffer
     uploadStream.end(file.buffer);
   });
 };

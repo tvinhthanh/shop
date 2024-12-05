@@ -64,6 +64,7 @@ router.get('/:id', async (req, res) => {
 
 // Route to create a new booking
 router.post('/', async (req, res) => {
+  
   const {
     hotel_id,
     room_id,
